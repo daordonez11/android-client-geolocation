@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.danielordonez.labredes5.MainActivity">
+
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Bienvenido, seleccione el protocolo que desee utilizar:"
+        android:id="@+id/tvTitle"
+        android:layout_alignParentTop="true"/>
+    <info.hoang8f.android.segmented.SegmentedGroup
+        xmlns:segmentedgroup="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/segmentedGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="horizontal"
+        android:layout_below="@+id/tvTitle"
+        segmentedgroup:sc_border_width="2dp"
+        segmentedgroup:sc_corner_radius="10dp"
+        segmentedgroup:sc_tint_color="#3F51B5"
+        android:layout_centerHorizontal="true">
+
+        <RadioButton
+            android:id="@+id/btnTCP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TCP"
+            android:checked="true"
+            style="@style/RadioButton" />
+
+        <RadioButton
+            android:id="@+id/btnUDP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="UDP"
+            style="@style/RadioButton" />
+    </info.hoang8f.android.segmented.SegmentedGroup>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="IP del servidor:"
+        android:layout_below="@+id/segmentedGroup"
+        android:id="@+id/tvIP" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Puerto:"
+        android:layout_below="@+id/tvIP"
+        android:id="@+id/tvPort" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tvPort"
+        android:id="@+id/scrollViewLog"
+        android:layout_above="@+id/acciones">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_marginTop="5dp"
+            android:text=""
+            android:id="@+id/tvMessage"
+
+            />
+    </ScrollView>
+
+
+    <LinearLayout
+        android:id="@+id/acciones"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+      android:layout_alignParentBottom="true">
+        <com.rey.material.widget.Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Empezar"
+            android:id="@+id/btnStart"
+            android:background="@drawable/esquinas_curvas"
+            android:textColor="#FFFFFF"
+            android:layout_marginRight="10dp"
+            app:rd_enable="true"
+            app:rd_rippleType="wave"
+            />
+        <com.rey.material.widget.Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Terminar"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:id="@+id/btnEnd"
+            android:background="@drawable/esquinas_curvas"
+            android:textColor="#FFFFFF"
+            app:rd_enable="true"
+            app:rd_rippleType="wave"
+            />
+        <com.rey.material.widget.Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Limpiar"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/btnLimpiar"
+            android:background="@drawable/esquinas_curvas"
+            android:textColor="#FFFFFF"
+            app:rd_enable="true"
+            app:rd_rippleType="wave"
+            />
+    </LinearLayout>
+
+    <com.rey.material.widget.EditText
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/etServerIP"
+        android:layout_below="@+id/segmentedGroup"
+        android:layout_toRightOf="@+id/tvIP"
+        android:layout_toEndOf="@+id/tvIP" />
+    <com.rey.material.widget.EditText
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/etPort"
+        android:layout_below="@+id/etServerIP"
+        android:layout_toRightOf="@+id/tvPort"
+        android:layout_toEndOf="@+id/tvPort" />
+
+
+
+
+</RelativeLayout>
