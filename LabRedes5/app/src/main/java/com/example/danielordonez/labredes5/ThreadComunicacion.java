@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -39,12 +40,14 @@ public class ThreadComunicacion extends Thread {
     private LocationManager lm;
     private View cont;
     private TextView mensajes;
+    private LocationManager mlocManager;
     private  GoogleApiClient mGoogleApiClient;
 
-    public ThreadComunicacion(String protocolon, String serverIP, int port, View view, GoogleApiClient mGoogleApiClient) {
+    public ThreadComunicacion(String protocolon, String serverIP, int port, View view, GoogleApiClient mGoogleApiClient,LocationManager mlocManager) {
         this.protocolo = protocolon;
         this.serverIP = serverIP;
         this.port = port;
+        this.mlocManager = mlocManager;
         cont = view;
 this.mGoogleApiClient=mGoogleApiClient;
 
@@ -98,10 +101,15 @@ this.mGoogleApiClient=mGoogleApiClient;
         }
         if (protocolo.equals("UDP")) {
             try {
-                address = Inet4Address.getByName(serverIP);
-                canalUDP = new DatagramSocket(port, address);
-                connected = true;
+                address = InetAddress.getByName(serverIP);
+                canalUDP = new DatagramSocket();
 
+
+                connected = true;
+                Snackbar snackbar = Snackbar
+                        .make(cont, "Se conectó correctamente", Snackbar.LENGTH_SHORT);
+
+                snackbar.show();
                 while (connected) {
                     enviarUbicacionUDP();
                     try {
@@ -117,9 +125,9 @@ this.mGoogleApiClient=mGoogleApiClient;
     }
 
     private void enviarUbicacionTCP() {
-        try {
-            Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
+        try {
+            Location mLastLocation =   mlocManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
             if(mLastLocation!=null)
             {
@@ -143,8 +151,45 @@ this.mGoogleApiClient=mGoogleApiClient;
         }
     }
     private void enviarUbicacionUDP() {
+        try {
+            Location mLastLocation =   mlocManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+
+            if(mLastLocation!=null)
+            {
+                String data = "Latitud: "+String.valueOf(mLastLocation.getLatitude())+" - Longitud: "+String.valueOf(mLastLocation.getLongitude())+" - Altitud: "+String.valueOf(mLastLocation.getAltitude())+" - Velocidad: "+String.valueOf(mLastLocation.getSpeed());
+                byte btest[] = new byte[50];
+                btest = data.getBytes();
+                DatagramPacket p1 = new DatagramPacket(btest, btest.length,address, port);
+                try {
+                    canalUDP.send(p1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            else
+            {
+                Snackbar snackbar = Snackbar
+                        .make(cont, "No encuentra ubicacion", Snackbar.LENGTH_SHORT);
+
+                snackbar.show();
+            }
+        }catch(SecurityException e)
+        {
+            Snackbar snackbar = Snackbar
+                    .make(cont, e.getMessage(), Snackbar.LENGTH_LONG);
+
+            snackbar.show();
+        }
 
     }
 
-
+    static void stringToPacket(String s, DatagramPacket packet) {
+        byte[] bytes = s.getBytes();
+        System.arraycopy(bytes, 0, packet.getData(), 0, bytes.length);
+        packet.setLength(bytes.length);
+    }
+    static String stringFromPacket(DatagramPacket packet) {
+        return new String(packet.getData(), 0, packet.getLength());
+    }
 }

@@ -88,22 +88,24 @@
         android:gravity="center_horizontal"
       android:layout_alignParentBottom="true">
         <com.rey.material.widget.Button
-            android:layout_width="wrap_content"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:text="Empezar"
             android:id="@+id/btnStart"
+            android:textSize="10dp"
             android:background="@drawable/esquinas_curvas"
             android:textColor="#FFFFFF"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="5dp"
             app:rd_enable="true"
             app:rd_rippleType="wave"
             />
         <com.rey.material.widget.Button
-            android:layout_width="wrap_content"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:text="Terminar"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:textSize="10dp"
             android:id="@+id/btnEnd"
             android:background="@drawable/esquinas_curvas"
             android:textColor="#FFFFFF"
@@ -111,15 +113,29 @@
             app:rd_rippleType="wave"
             />
         <com.rey.material.widget.Button
-            android:layout_width="wrap_content"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:text="Limpiar"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:id="@+id/btnLimpiar"
+            android:textSize="10dp"
             android:background="@drawable/esquinas_curvas"
             android:textColor="#FFFFFF"
             app:rd_enable="true"
             app:rd_rippleType="wave"
+            />
+        <com.rey.material.widget.Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ubicacion"
+            android:layout_marginLeft="5dp"
+            android:id="@+id/btnUbicacion"
+            android:background="@drawable/esquinas_curvas"
+            android:textColor="#FFFFFF"
+            app:rd_enable="true"
+            app:rd_rippleType="wave"
+            android:textSize="10dp"
             />
     </LinearLayout>
 

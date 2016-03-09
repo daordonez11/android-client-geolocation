@@ -39,41 +39,62 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final float MIN_ACCURACY = 25.0f;
     private static final float MIN_LAST_READ_ACCURACY = 500.0f;
     private ThreadComunicacion tc;
-    private Button emp, fin, limp;
+    private Button emp, fin, limp, ubc;
     private RadioButton tcp, udp;
     private TextView log;
-    private  GoogleApiClient mGoogleApiClient;
+    private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private Location mBestReading;
     private EditText puerto, ipadd;
+    private LocationManager mlocManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        log = (TextView)findViewById(R.id.tvMessage);
-        emp = (Button)findViewById(R.id.btnStart);
-        fin = (Button)findViewById(R.id.btnEnd);
-        limp = (Button)findViewById(R.id.btnLimpiar);
-        tcp = (RadioButton)findViewById(R.id.btnTCP);
-        udp = (RadioButton)findViewById(R.id.btnUDP);
-        puerto = (EditText)findViewById(R.id.etPort);
-        ipadd = (EditText)findViewById(R.id.etServerIP);
+        log = (TextView) findViewById(R.id.tvMessage);
+        emp = (Button) findViewById(R.id.btnStart);
+        fin = (Button) findViewById(R.id.btnEnd);
+        limp = (Button) findViewById(R.id.btnLimpiar);
+        ubc = (Button) findViewById(R.id.btnUbicacion);
+        tcp = (RadioButton) findViewById(R.id.btnTCP);
+        udp = (RadioButton) findViewById(R.id.btnUDP);
+        puerto = (EditText) findViewById(R.id.etPort);
+        ipadd = (EditText) findViewById(R.id.etServerIP);
         emp.setOnClickListener(this);
         fin.setOnClickListener(this);
         limp.setOnClickListener(this);
-
+        ubc.setOnClickListener(this);
         mLocationRequest = LocationRequest.create();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequest.setInterval(POLLING_FREQ);
         mLocationRequest.setFastestInterval(FASTEST_UPDATE_FREQ);
         if (mGoogleApiClient == null) {
-    mGoogleApiClient = new GoogleApiClient.Builder(this)
-        .addConnectionCallbacks(this)
-        .addOnConnectionFailedListener(this)
-        .addApi(LocationServices.API)
-        .build();
-}
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
+        mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        try {
+            Location mLastLocation = mlocManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (mLastLocation != null) {
+                Snackbar snackbar = Snackbar
+                        .make(findViewById(R.id.acciones), "Latitud: " + String.valueOf(mLastLocation.getLatitude()) + " - Longitud: " + String.valueOf(mLastLocation.getLongitude()) + " - Altitud: " + String.valueOf(mLastLocation.getAltitude()) + " - Velocidad: " + String.valueOf(mLastLocation.getSpeed())
+                                , Snackbar.LENGTH_SHORT);
+
+                snackbar.show();
+            }
+
+        } catch (SecurityException e) {
+            Snackbar snackbar = Snackbar
+                    .make(findViewById(R.id.acciones), e.getMessage(), Snackbar.LENGTH_SHORT);
+
+            snackbar.show();
+        }
+
 
 
 
@@ -86,67 +107,65 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if(tcp.isChecked())
             {
                 log.setText("Comienza proceso TCP");
-                tc = new ThreadComunicacion("TCP", ipadd.getText().toString(),Integer.parseInt(puerto.getText().toString()),findViewById(R.id.acciones),mGoogleApiClient);
+                tc = new ThreadComunicacion("TCP", ipadd.getText().toString(),Integer.parseInt(puerto.getText().toString()),findViewById(R.id.acciones),mGoogleApiClient,mlocManager);
                 tc.start();
             }
             else
             {
-
+                log.setText("Comienza proceso UDP");
+                tc = new ThreadComunicacion("UDP", ipadd.getText().toString(),Integer.parseInt(puerto.getText().toString()),findViewById(R.id.acciones),mGoogleApiClient,mlocManager);
+                tc.start();
             }
         }
         if(v.getId()==R.id.btnEnd)
         {
             if(tcp.isChecked())
             {
-                log.setText(log.getText()+"\nTerminando conexión");
+                log.setText(log.getText()+"\nTerminando conexión TCP");
                 tc.terminarConexion();
                 tc.interrupt();
             }
             else
             {
-
+                log.setText(log.getText()+"\nTerminando conexión UDP");
+                tc.terminarConexion();
+                tc.interrupt();
             }
         }
         if(v.getId()==R.id.btnLimpiar)
         {
             log.setText("");
-            //if (ContextCompat.checkSelfPermission(this,
-              //      Manifest.permission.ACCESS_FINE_LOCATION)
-                //    != PackageManager.PERMISSION_GRANTED) {
 
-                // Should we show an explanation?
+        }
+        if(v.getId()==R.id.btnUbicacion)
+        {
+            if (ContextCompat.checkSelfPermission(this,
+                  Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+               ActivityCompat.requestPermissions(this,
+                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                   1);
+              }
+            LocationManager mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+             try{
+               Location mLastLocation =   mlocManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+             if(mLastLocation!=null)
+            {
+               Snackbar snackbar = Snackbar
+                       .make(findViewById(R.id.acciones), "Latitud: "+String.valueOf(mLastLocation.getLatitude())+" - Longitud: "+String.valueOf(mLastLocation.getLongitude())+" - Altitud: "+String.valueOf(mLastLocation.getAltitude())+" - Velocidad: "+String.valueOf(mLastLocation.getSpeed())
+                , Snackbar.LENGTH_SHORT);
 
+              snackbar.show();
+              }
 
-                    // No explanation needed, we can request the permission.
+              }
+            catch(SecurityException e)
+            {
+                Snackbar snackbar = Snackbar
+                        .make(findViewById(R.id.acciones), e.getMessage(), Snackbar.LENGTH_SHORT);
 
-                 //   ActivityCompat.requestPermissions(this,
-                   //         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                     //       1);
-
-                    // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                    // app-defined int constant. The callback method gets the
-                    // result of the request.
-
-          //  }
-         //   LocationManager mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-           // try{
-             //   Location a =   mlocManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-               // if(a!=null)
-                //{
-                 //   Snackbar snackbar = Snackbar
-                 //           .make(findViewById(R.id.acciones), "Prueba: "+a.getLatitude(), Snackbar.LENGTH_SHORT);
-
-                  //  snackbar.show();
-//                }
-
-            //   }
-            //catch(SecurityException e)
-            //{
-            //    Snackbar snackbar = Snackbar
-            //            .make(findViewById(R.id.acciones), e.getMessage(), Snackbar.LENGTH_SHORT);
-
-//                snackbar.show();
-  //          }
+                snackbar.show();
+                      }
         }
     }
     public void setMessage(final String mess)
