@@ -42,9 +42,11 @@ public class ThreadComunicacion extends Thread {
     private TextView mensajes;
     private LocationManager mlocManager;
     private  GoogleApiClient mGoogleApiClient;
+    private int idActual;
 
-    public ThreadComunicacion(String protocolon, String serverIP, int port, View view, GoogleApiClient mGoogleApiClient,LocationManager mlocManager) {
+    public ThreadComunicacion(int id,String protocolon, String serverIP, int port, View view, GoogleApiClient mGoogleApiClient,LocationManager mlocManager) {
         this.protocolo = protocolon;
+        idActual = id;
         this.serverIP = serverIP;
         this.port = port;
         this.mlocManager = mlocManager;
@@ -131,7 +133,7 @@ this.mGoogleApiClient=mGoogleApiClient;
 
             if(mLastLocation!=null)
             {
-                out.println(("Latitud: "+String.valueOf(mLastLocation.getLatitude())+" - Longitud: "+String.valueOf(mLastLocation.getLongitude())+" - Altitud: "+String.valueOf(mLastLocation.getAltitude())+" - Velocidad: "+String.valueOf(mLastLocation.getSpeed())));
+                out.println(("Hilo: "+idActual+" - Latitud: "+String.valueOf(mLastLocation.getLatitude())+" - Longitud: "+String.valueOf(mLastLocation.getLongitude())+" - Altitud: "+String.valueOf(mLastLocation.getAltitude())+" - Velocidad: "+String.valueOf(mLastLocation.getSpeed())));
 
             }
             else
@@ -157,7 +159,7 @@ this.mGoogleApiClient=mGoogleApiClient;
 
             if(mLastLocation!=null)
             {
-                String data = "Latitud: "+String.valueOf(mLastLocation.getLatitude())+" - Longitud: "+String.valueOf(mLastLocation.getLongitude())+" - Altitud: "+String.valueOf(mLastLocation.getAltitude())+" - Velocidad: "+String.valueOf(mLastLocation.getSpeed());
+                String data = "Hilo: "+idActual+" - Latitud: "+String.valueOf(mLastLocation.getLatitude())+" - Longitud: "+String.valueOf(mLastLocation.getLongitude())+" - Altitud: "+String.valueOf(mLastLocation.getAltitude())+" - Velocidad: "+String.valueOf(mLastLocation.getSpeed());
                 byte btest[] = new byte[50];
                 btest = data.getBytes();
                 DatagramPacket p1 = new DatagramPacket(btest, btest.length,address, port);

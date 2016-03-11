@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private Location mBestReading;
-    private EditText puerto, ipadd;
+    private EditText puerto, ipadd, numThreads;
     private LocationManager mlocManager;
 
     @Override
@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         udp = (RadioButton) findViewById(R.id.btnUDP);
         puerto = (EditText) findViewById(R.id.etPort);
         ipadd = (EditText) findViewById(R.id.etServerIP);
+        numThreads=(EditText)findViewById(R.id.etThreads);
         emp.setOnClickListener(this);
         fin.setOnClickListener(this);
         limp.setOnClickListener(this);
@@ -106,19 +107,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         {
             if(tcp.isChecked())
             {
+                int numth = (int)Integer.parseInt(numThreads.getText().toString());
                 log.setText("Comienza proceso TCP");
-                tc = new ThreadComunicacion("TCP", ipadd.getText().toString(),Integer.parseInt(puerto.getText().toString()),findViewById(R.id.acciones),mGoogleApiClient,mlocManager);
-                tc.start();
+                for(int i = 0; i<numth;i++)
+                {
+                    log.setText(log.getText()+"\nComienza hilo TCP: "+(i+1));
+                    tc = new ThreadComunicacion(i+1,"TCP", ipadd.getText().toString(),Integer.parseInt(puerto.getText().toString()),findViewById(R.id.acciones),mGoogleApiClient,mlocManager);
+                    tc.start();
+                }
+
             }
             else
             {
+                int numth = (int)Integer.parseInt(numThreads.getText().toString());
                 log.setText("Comienza proceso UDP");
-                tc = new ThreadComunicacion("UDP", ipadd.getText().toString(),Integer.parseInt(puerto.getText().toString()),findViewById(R.id.acciones),mGoogleApiClient,mlocManager);
-                tc.start();
+                for(int i = 0; i<numth;i++)
+                {
+                    log.setText(log.getText()+"\nComienza hilo UDP: "+(i+1));
+                    tc = new ThreadComunicacion(i+1,"UDP", ipadd.getText().toString(),Integer.parseInt(puerto.getText().toString()),findViewById(R.id.acciones),mGoogleApiClient,mlocManager);
+                    tc.start();
+                }
             }
         }
         if(v.getId()==R.id.btnEnd)
         {
+
             if(tcp.isChecked())
             {
                 log.setText(log.getText()+"\nTerminando conexión TCP");
@@ -157,6 +170,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
               snackbar.show();
               }
+                 else
+             {
+                 Snackbar snackbar = Snackbar
+                         .make(findViewById(R.id.acciones), "No encuentra ubicacion"
+                                 , Snackbar.LENGTH_SHORT);
+
+                 snackbar.show();
+             }
 
               }
             catch(SecurityException e)

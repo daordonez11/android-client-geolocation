@@ -61,10 +61,17 @@
         android:text="Puerto:"
         android:layout_below="@+id/tvIP"
         android:id="@+id/tvPort" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="# Threads:"
+        android:layout_below="@+id/tvPort"
+        android:id="@+id/tvThreads" />
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/tvPort"
+        android:layout_below="@+id/tvThreads"
         android:id="@+id/scrollViewLog"
         android:layout_above="@+id/acciones">
 
@@ -153,6 +160,13 @@
         android:layout_below="@+id/etServerIP"
         android:layout_toRightOf="@+id/tvPort"
         android:layout_toEndOf="@+id/tvPort" />
+    <com.rey.material.widget.EditText
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/etThreads"
+        android:layout_below="@+id/etPort"
+        android:layout_toRightOf="@+id/tvThreads"
+        android:layout_toEndOf="@+id/tvThreads" />
 
 
 
